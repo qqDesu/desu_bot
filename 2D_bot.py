@@ -21,14 +21,14 @@ def help_message(message):
     
 @bot.message_handler(commands=['waifu'])
 def main_category_select(message):
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True) #, one_time_keyboard=True
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     categories = ['sfw', 'nsfw']
     keyboard.add(*categories)
     bot.send_message(message.chat.id, "Category?", reply_markup=keyboard) 
     bot.register_next_step_handler(message, subcategory_select)
 
 def subcategory_select(message):    
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True) #, one_time_keyboard=True
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     
     if message.text == 'sfw':
         global category
