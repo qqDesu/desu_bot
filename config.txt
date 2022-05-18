@@ -1,0 +1,2 @@
+[auth]
+token = 5038025851:AAHm4BV1V6VYrw-8rT2l1dRH35yfYADX0PM
