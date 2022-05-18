@@ -4,6 +4,8 @@ from telebot import types
 import json
 from configparser import ConfigParser
 
+#commit test
+
 parser = ConfigParser()
 parser.read("config.txt")
 token = parser.get("auth", "token")
