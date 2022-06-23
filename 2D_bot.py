@@ -3,6 +3,7 @@ import telebot
 from telebot import types
 import json
 from configparser import ConfigParser
+import redis
 
 parser = ConfigParser()
 parser.read("config.txt")
@@ -10,6 +11,8 @@ token = parser.get("auth", "token")
 
 bot = telebot.TeleBot(token)
 
+statsDB = redis.Redis(host='redis', port=6379, db=0)
+usersDB = redis.Redis(host='redis', port=6379, db=1)
 
 @bot.message_handler(commands=['start'],content_types='text')
 def start_message(message):
@@ -34,8 +37,8 @@ def subcategory_select(message):
         global category
         category = message.text
         
-        sfw_categories = ['waifu','neko','shinobu','megumin','bully','cuddle','cry','hug','awoo','kiss','lick','pat','smug','bonk','yeet','blush','smile','wave','highfive','handhold','nom','bite','glomp','slap','kill','kick','happy','wink','poke','dance','cringe', 'Back to main menu']
-        keyboard.add(*sfw_categories)
+        sfw_tags = ['waifu','neko','shinobu','megumin','bully','cuddle','cry','hug','awoo','kiss','lick','pat','smug','bonk','yeet','blush','smile','wave','highfive','handhold','nom','bite','glomp','slap','kill','kick','happy','wink','poke','dance','cringe', 'Back to main menu']
+        keyboard.add(*sfw_tags)
         
         bot.send_message(message.chat.id, "Choose your waifu (￣ω￣)", reply_markup=keyboard)
         bot.register_next_step_handler(message, waifu_url)
@@ -44,21 +47,21 @@ def subcategory_select(message):
     elif message.text == 'nsfw':
         category = message.text
         
-        nsfw_categories = ['waifu','neko','trap','blowjob', 'Back to main menu']
-        keyboard.add(*nsfw_categories)
+        nsfw_tags = ['waifu','neko','trap','blowjob', 'Back to main menu']
+        keyboard.add(*nsfw_tags)
         
         bot.send_message(message.chat.id, "Choose your waifu (￣ω￣)", reply_markup=keyboard)
         bot.register_next_step_handler(message, waifu_url)
 
 def waifu_url(message):
-    subcategory = message.text
-    if subcategory == 'Back to main menu':
+    tag = message.text
+    if tag == 'Back to main menu':
         bot.send_message(message.chat.id, "Make up your mind already! BAKAYARO ヽ( `д´*)ノ")
         main_category_select(message)
         
         
     else:
-        response = requests.get(('https://api.waifu.pics/{}/{}').format(category, subcategory))
+        response = requests.get(('https://api.waifu.pics/{}/{}').format(category, tag))
         json_url = response.json()
         waifu = json_url['url']
         bot.send_photo(message.chat.id, photo=waifu)

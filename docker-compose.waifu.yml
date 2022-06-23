@@ -1,0 +1,15 @@
+version: "3"
+services:
+  waifu_bot:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    container_name: waifu_bot
+    command: python3 ./2D_bot.py
+  redis:
+    image: "redis:alpine"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ./redis_data:/data
+      - ./redis_dump:/var/lib/redis
