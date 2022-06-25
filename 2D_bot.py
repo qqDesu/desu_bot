@@ -1,4 +1,3 @@
-from urllib import response
 import requests
 import telebot
 from telebot import types
